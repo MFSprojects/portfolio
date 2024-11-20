@@ -2,7 +2,6 @@
 
 
 <strong>CERTIFICATIONS</strong><br><br>
-
 <strong>COMPTIA SECURITY+ ce</strong>
 Certified October 2024
 Access Control, Cryptography, Digital Forensics, Data Security, Firewall Configuration, Threat & Vulnerability Detection, Malware Analysis, IT Security Awareness, Scripting & Automation
