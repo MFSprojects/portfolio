@@ -12,9 +12,6 @@ Foundations of Cybersecurity, Managing Security Risks, Networks and Security, As
 <br><br><br>
 <strong>TECHNICAL SKILLS</strong>
 <br><br>
-Digital Marketing & Analytics:
-Strategic in using data insights such as streaming numbers, ticket & merch sales, plus social metrics to adjust and refine marketing efforts
-<br><br>
 Project Management & Organization:
 Proven efficiency in time management and prioritizing multiple, simultaneous projects across diverse environments
 <br><br>
@@ -29,4 +26,7 @@ Skilled in managing both client-facing and internal communications, fostering st
 <br><br>
 Database & Reporting:
 Adept at managing and reporting on databases, leveraging data-driven insights for informed decision-making
+<br><br>
+Digital Marketing & Analytics:
+Strategic in using data insights such as streaming numbers, ticket & merch sales, plus social metrics to adjust and refine marketing efforts
 
