@@ -1,7 +1,7 @@
 # portfolio
 
 
-CERTIFICATIONS///
+<strong>CERTIFICATIONS///</strong><br><br>
 
 COMPTIA SECURITY+ ce
 Certified October 2024
