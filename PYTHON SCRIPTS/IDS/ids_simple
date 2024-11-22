@@ -1,0 +1,59 @@
+#!/bin/python3
+
+from scapy.all import sniff, IP, TCP
+import logging
+
+# Setup logging to log suspicious activities
+logging.basicConfig(filename="ids.log", level=logging.INFO, format="%(asctime)s - %(message)s")
+
+# Define a list of suspicious IPs or patterns
+SUSPICIOUS_IPS = ["192.168.1.100"]  # Example: a known bad IP address
+SUSPICIOUS_PORTS = [4444, 1337]  # Example: ports often used by malware
+THRESHOLD = 50  # Packet count threshold for potential DDoS attacks
+
+traffic_count = {}  # Dictionary to track traffic by IP
+
+def detect_packet(packet):
+    """
+    Callback function to process each captured packet.
+    """
+    if IP in packet:
+        src_ip = packet[IP].src
+        dst_ip = packet[IP].dst
+        src_port = packet[TCP].sport if TCP in packet else "N/A"
+        dst_port = packet[TCP].dport if TCP in packet else "N/A"
+
+        # Log packets from suspicious IPs
+        if src_ip in SUSPICIOUS_IPS or dst_ip in SUSPICIOUS_IPS:
+            logging.warning(f"Suspicious activity: Packet from/to {src_ip} -> {dst_ip}")
+
+        # Log packets to suspicious ports
+        if dst_port in SUSPICIOUS_PORTS:
+            logging.warning(f"Suspicious port access: {src_ip}:{src_port} -> {dst_ip}:{dst_port}")
+
+        # Detect potential DDoS (high packet volume from a single IP)
+        if src_ip not in traffic_count:
+            traffic_count[src_ip] = 0
+        traffic_count[src_ip] += 1
+
+        if traffic_count[src_ip] > THRESHOLD:
+            logging.critical(f"Potential DDoS detected from {src_ip} with {traffic_count[src_ip]} packets.")
+            traffic_count[src_ip] = 0  # Reset after alert
+
+def start_ids(interface="eth0"):
+    """
+    Start the IDS to monitor traffic on the specified network interface.
+    """
+    print(f"Starting IDS on interface {interface}...")
+    logging.info(f"IDS started on interface {interface}")
+    sniff(iface=interface, prn=detect_packet, store=False)
+
+if __name__ == "__main__":
+    try:
+        # Change interface to the one you want to monitor
+        start_ids(interface="lo")  # 'lo' for localhost; replace with your network interface
+    except KeyboardInterrupt:
+        print("IDS shutting down...")
+        logging.info("IDS manually stopped.")
+    except Exception as e:
+        logging.error(f"Error occurred: {e}")
