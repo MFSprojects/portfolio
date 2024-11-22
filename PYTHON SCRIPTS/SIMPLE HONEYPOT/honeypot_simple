@@ -1,0 +1,51 @@
+#!/bin/python3
+
+import socket
+import logging 
+
+# Setup logging
+logging.basicConfig(filename="honeypot.log", level=logging.INFO, format="%(asctime)s - %(message)s")
+
+def start_honeypot(host='0.0.0.0', port=2222):
+    """
+    A simple honeypot server that listens for connections on the specified host and port.
+    """
+    # Create a TCP/IP socket
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    try:
+        # Bind the socket to the address and port
+        server_socket.bind((host, port))
+        server_socket.listen(5)  # Listen for up to 5 connections
+        logging.info(f"Honeypot started on {host}:{port}")
+
+        while True:
+            # Accept a connection
+            client_socket, client_address = server_socket.accept()
+            logging.info(f"Connection attempt from {client_address}")
+
+            # Simulate SSH banner
+            client_socket.send(b"SSH-2.0-OpenSSH_7.6p1 Ubuntu-4ubuntu0.3\r\n")
+            
+            # Receive data (for this example, limit to 1024 bytes)
+            data = client_socket.recv(1024)
+            if data:
+                logging.info(f"Received data from {client_address}: {data.decode(errors='ignore').strip()}")
+            
+            # Respond to the attacker (fake response)
+            client_socket.send(b"Permission denied (publickey,password).\r\n")
+            
+            # Close the connection
+            client_socket.close()
+    
+    except KeyboardInterrupt:
+        logging.info("Honeypot shutting down.")
+    except Exception as e:
+        logging.error(f"Error: {e}")
+    finally:
+        server_socket.close()
+
+if __name__ == "__main__":
+    start_honeypot()
+
+
